@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>WoW Forever - Kader Planer</title>
+    <style>
+        body { background-color: #111; color: #f3e5ab; font-family: 'Arial', sans-serif; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: #c79c6e; text-shadow: 2px 2px 4px #000; margin-bottom: 25px; }
+        .container { display: flex; gap: 30px; max-width: 1300px; margin: 0 auto; }
+        .editor, .list-area { background: #1a1a1a; border: 2px solid #c79c6e; border-radius: 8px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.7); }
+        .editor { flex: 1; max-width: 420px; }
+        .list-area { flex: 2; display: flex; flex-direction: column; }
+        label { display: block; margin: 12px 0 5px; font-weight: bold; }
+        input[type="text"] { width: 94%; padding: 10px; background: #2a2a2a; color: #fff; border: 1px solid #c79c6e; border-radius: 4px; font-size: 15px; margin-bottom: 5px; }
+        .name-row { display: flex; gap: 10px; }
+        .name-row div { flex: 1; }
+        select { width: 100%; padding: 10px; background: #2a2a2a; color: #fff; border: 1px solid #c79c6e; border-radius: 4px; font-size: 15px; }
+        .fraktion-select { display: flex; gap: 15px; margin-bottom: 10px; }
+        .fraktion-btn { flex: 1; padding: 12px; text-align: center; background: #2a2a2a; border: 2px solid #555; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
+        .fraktion-btn.active.allianz { background: #1c2833; border-color: #0070DE; box-shadow: 0 0 8px #0070DE; }
+        .fraktion-btn.active.horde { background: #2c1a1a; border-color: #C41F3B; box-shadow: 0 0 8px #C41F3B; }
+        .racial-box { background: #222; border: 1px dashed #c79c6e; padding: 10px; margin-top: 10px; border-radius: 4px; font-size: 13px; color: #ddd; }
+        .racial-title { color: #f3e5ab; font-weight: bold; margin-bottom: 4px; }
+        .add-btn { width: 100%; background: #c79c6e; color: #111; font-weight: bold; border: none; padding: 14px; border-radius: 4px; font-size: 16px; margin-top: 25px; cursor: pointer; transition: 0.2s; }
+        .add-btn:hover { background: #f3e5ab; }
+        .char-card { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; margin-bottom: 10px; border-radius: 5px; border-left: 6px solid #fff; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .char-info { display: flex; flex-direction: column; gap: 4px; }
+        .char-name { font-size: 18px; color: #fff; text-shadow: 1px 1px 2px #000; }
+        .char-details { font-size: 14px; color: #f3e5ab; }
+        .char-professions { font-size: 13px; color: #ddd; font-weight: normal; }
+        .del-btn { background: #441111; color: #ff6666; border: 1px solid #ff6666; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .del-btn:hover { background: #ff6666; color: #111; }
+        .print-btn { background: #3a5fcd; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .print-btn:hover { background: #4a6fdd; }
+        .empty-msg { color: #888; text-align: center; margin-top: 40px; font-style: italic; }
+        
+        .action-row { display: flex; gap: 10px; justify-content: space-between; margin-top: auto; padding-top: 15px; }
+        .sync-btn { background: #2a2a2a; color: #c79c6e; border: 1px solid #c79c6e; padding: 10px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .sync-btn:hover { background: #c79c6e; color: #111; }
+        
+        /* Highlight für genutzte Optionen IM Dropdown */
+        option.used-item { background-color: #1e3a1e !important; color: #2ecc71 !important; font-weight: bold; }
+        
+        /* Klassenfarben Definitionen */
+        .cls-Krieger { background-color: #3a2e24; border-color: #C79C6E !important; color: #C79C6E; }
+        .cls-Paladin { background-color: #3b202c; border-color: #F58CBA !important; color: #F58CBA; }
+        .cls-Jäger { background-color: #28331b; border-color: #ABD473 !important; color: #ABD473; }
+        .cls-Schurke { background-color: #3b3919; border-color: #FFF569 !important; color: #FFF569; }
+        .cls-Priester { background-color: #333333; border-color: #FFFFFF !important; color: #FFFFFF; }
+        .cls-Schamane { background-color: #10243a; border-color: #0070DE !important; color: #0070DE; }
+        .cls-Magier { background-color: #19313a; border-color: #40C7EB !important; color: #40C7EB; }
+        .cls-Hexenmeister { background-color: #261f33; border-color: #9482C9 !important; color: #9482C9; }
+        .cls-Druide { background-color: #3a2310; border-color: #FF7D0A !important; color: #FF7D0A; }
+
+        /* Druckvorschau Pop-up Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; z-index: 1000; overflow-y: auto; padding: 20px 0; }
+        .modal-box { background: #1a1a1a; color: #f3e5ab; width: 90%; max-width: 800px; border: 2px solid #c79c6e; border-radius: 8px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #c79c6e; padding-bottom: 15px; margin-bottom: 20px; }
+        .modal-title { font-size: 22px; font-weight: bold; color: #c79c6e; text-shadow: 1px 1px 3px #000; }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .modal-btn-print { background: #3a5fcd; color: white; }
+        .modal-btn-print:hover { background: #4a6fdd; }
+        .modal-btn-close { background: #441111; color: #ff6666; border: 1px solid #ff6666; }
+        .modal-btn-close:hover { background: #ff6666; color: #111; }
+        
+        .preview-body { padding: 10px 0; }
+        .preview-body h1 { color: #c79c6e; font-size: 24px; border-bottom: 1px solid #c79c6e; padding-bottom: 10px; margin-bottom: 20px; }
+
+        @media print {
+            body * { display: none !important; }
+            #modal-overlay, #modal-overlay * { display: flex !important; }
+            .modal-header, .modal-actions { display: none !important; }
+            .modal-overlay { position: absolute; top: 0; left: 0; background: #111 !important; width: 100%; height: auto; padding: 0; }
+            .modal-box { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; max-height: none; overflow: visible; background: transparent !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>⚔️ World of Warcraft: Forever — Kader- & Berufsplaner ⚔️</h1>
+
+    <div class="container">
+        <div class="editor">
+            <h2>Charakter-Editor</h2>
+            
+            <div class="name-row">
+                <div>
+                    <label for="inp-vorname">Vorname:</label>
+                    <input type="text" id="inp-vorname" placeholder="z.B. Thrall">
+                </div>
+                <div>
+                    <label for="inp-nachname">Nachname:</label>
+                    <input type="text" id="inp-nachname" placeholder="z.B. Schicksalshammer">
+                </div>
+            </div>
+            
+            <label>1. Fraktion wählen:</label>
+            <div class="fraktion-select">
+                <div id="btn-allianz" class="fraktion-btn active allianz" onclick="setFraktion('Allianz')">Allianz 🔵</div>
+                <div id="btn-horde" class="fraktion-btn horde" onclick="setFraktion('Horde')">Horde 🔴</div>
+            </div>
+
+            <label for="sel-rasse">2. Volk wählen:</label>
+            <select id="sel-rasse" onchange="updateKlassen()"></select>
+            
+            <div id="racial-display" class="racial-box"></div>
+
+            <label for="sel-klasse">3. Klasse wählen:</label>
+            <select id="sel-klasse" onchange="markUsedOptions()"></select>
+
+            <label for="sel-beruf1">4. Erster Hauptberuf:</label>
+            <select id="sel-beruf1" onchange="markUsedOptions()"></select>
+
+            <label for="sel-beruf2">5. Zweiter Hauptberuf:</label>
+            <select id="sel-beruf2" onchange="markUsedOptions()"></select>
+
+            <button class="add-btn" onclick="addCharacter()">➕ Charakter zur Liste hinzufügen</button>
+        </div>
+
+        <div class="list-area">
+            <h2>Deine Charakterübersicht</h2>
+            <div id="char-list-container">
+                <div class="empty-msg">Noch keine Charaktere erstellt. Nutze den Editor links!</div>
+            </div>
+            
+            <div class="action-row">
+                <div>
+                    <button class="sync-btn" onclick="exportData()">💾 Exportieren</button>
+                    <button class="sync-btn" onclick="document.getElementById('import-file').click()">📂 Importieren</button>
+                    <input type="file" id="import-file" style="display:none" onchange="importData(this)" accept=".json">
+                </div>
+                <button class="print-btn" onclick="openPrintPreview()">🖨️ Liste ausdrucken</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span class="modal-title">🖨️ Druckvorschau (Kaderliste)</span>
+                <div class="modal-actions">
+                    <button class="modal-btn modal-btn-print" onclick="window.print()">Jetzt drucken</button>
+                    <button class="modal-btn modal-btn-close" onclick="closePrintPreview()">Schließen</button>
+                </div>
+            </div>
+            <div id="preview-content" class="preview-body"></div>
+        </div>
+    </div>
+
+    <script>
+        let aktuelleFraktion = "Allianz";
+        let charaktere = [];
+
+        const rassenFraktion = {
+            "Allianz": ["Mensch", "Nachtelf", "Zwerg", "Gnom", "Himmelsgeborene"],
+            "Horde": ["Orc", "Untoter", "Taure", "Troll", "Himmelsgeborene"]
+        };
+        const erlaubteKombis = {
+            "Mensch": ["Krieger", "Paladin", "Schurke", "Priester", "Magier", "Hexenmeister", "Jäger"],
+            "Nachtelf": ["Krieger", "Jäger", "Schurke", "Priester", "Druide"],
+            "Zwerg": ["Krieger", "Paladin", "Jäger", "Schurke", "Priester", "Schamane"],
+            "Gnom": ["Krieger", "Schurke", "Magier", "Hexenmeister", "Priester"],
+            "Orc": ["Krieger", "Jäger", "Schurke", "Schamane", "Hexenmeister", "Magier"],
+            "Untoter": ["Krieger", "Schurke", "Priester", "Magier", "Hexenmeister", "Paladin"],
+            "Taure": ["Krieger", "Jäger", "Schamane", "Druide"],
+            "Troll": ["Krieger", "Jäger", "Schurke", "Priester", "Schamane", "Magier", "Hexenmeister"],
+            "Himmelsgeborene": ["Krieger", "Jäger", "Schurke", "Priester", "Magier", "Druide"]
+        };
+        const volksfaehigkeiten = {
+            "Mensch": "Diplomatie (+Ruf), Wachsamkeit, Schwert- & Kolben-Spezialisierung, Willenskraft erhöht.",
+            "Nachtelf": "Schattenhaftigkeit (Unsichtbarkeit), Schnelligkeit (+Ausweichen), Naturwiderstand.",
+            "Zwerg": "Steingestalt (Rüstung & Immunität gegen Gifte/Blutungen), Schatzsuche, Frostwiderstand.",
+            "Gnom": "Entfesselungskünstler, Wacher Geist (+Intellekt), Ingenieurskunst-Spezialisierung.",
+            "Orc": "Kochenzorn (Schadensboost), Zähigkeit (Betäubungswiderstand), Befehlsgewalt.",
+            "Untoter": "Wille der Verlassenen (bricht Furcht/Schlaf), Kanibalismus, Unterwasseratmung.",
+            "Taure": "Ausdauer (+Gesundheit), Kriegsaufstampfen (Stun), Anbau (Kräuterkunde-Bonus).",
+            "Troll": "Berserker (Tempo-Boost), Regeneration, Wildtierschlächter.",
+            "Himmelsgeborene": "Arkaner Strom (Stilleffekt), Magiewiderstand, Arkane Affinität."
+        };
+        
+        // Exakt die 9 WoW Classic Hauptberufe von WoW Forever
+        const berufe = ["Alchemie", "Bergbau", "Ingenieurskunst", "Kräuterkunde", "Kürschnerei", "Lederverarbeitung", "Schmiedekunst", "Schneiderei", "Verzauberungskunst"];
+
+        window.onload = function() {
+            initBerufe();
+            loadFromLocalStorage();
+            setFraktion("Allianz");
+        };
+
+        function initBerufe() {
+            const b1 = document.getElementById("sel-beruf1");
+            const b2 = document.getElementById("sel-beruf2");
+            b1.innerHTML = ""; b2.innerHTML = "";
+            berufe.forEach(b => {
+                b1.innerHTML += `<option value="${b}">${b}</option>`;
+                b2.innerHTML += `<option value="${b}">${b}</option>`;
+            });
+            b2.selectedIndex = 1;
+        }
+
+        function setFraktion(fraktion) {
+            aktuelleFraktion = fraktion;
+            document.getElementById("btn-allianz").classList.toggle("active", fraktion === "Allianz");
+            document.getElementById("btn-horde").classList.toggle("active", fraktion === "Horde");
+            
+            const rasseSelect = document.getElementById("sel-rasse");
+            rasseSelect.innerHTML = "";
+            rassenFraktion[fraktion].forEach(r => {
+                rasseSelect.innerHTML += `<option value="${r}">${r}</option>`;
+            });
+            updateKlassen();
+        }
+
+        function updateKlassen() {
+            const rasse = document.getElementById("sel-rasse").value;
+            const klasseSelect = document.getElementById("sel-klasse");
+            klasseSelect.innerHTML = "";
+            
+            if(erlaubteKombis[rasse]) {
+                erlaubteKombis[rasse].forEach(k => {
+                    klasseSelect.innerHTML += `<option value="${k}">${k}</option>`;
+                });
+            }
+            document.getElementById("racial-display").innerHTML = `<div class="racial-title">Volksfähigkeit (${rasse}):</div>${volksfaehigkeiten[rasse] || ''}`;
+            markUsedOptions();
+        }
+
+        function markUsedOptions() {
+            // Bereits verwendete Klassen/Berufe sammeln
+            const usedKlassen = charaktere.map(c => c.klasse);
+            const usedBerufe = [];
+            charaktere.forEach(c => {
+                if(c.beruf1) usedBerufe.push(c.beruf1);
+                if(c.beruf2) usedBerufe.push(c.beruf2);
+            });
+
+            // Klassen Optionen markieren
+            const klSelect = document.getElementById("sel-klasse");
+            Array.from(klSelect.options).forEach(opt => {
+                if(usedKlassen.includes(opt.value)) {
+                    opt.classList.add("used-item");
+                    if(!opt.text.endsWith(" ✓")) opt.text += " ✓";
+                } else {
+                    opt.classList.remove("used-item");
+                    opt.text = opt.value;
+                }
+            });
+
+            // Beruf 1 Optionen markieren
+            const b1Select = document.getElementById("sel-beruf1");
+            Array.from(b1Select.options).forEach(opt => {
+                if(usedBerufe.includes(opt.value)) {
+                    opt.classList.add("used-item");
+                    if(!opt.text.endsWith(" ✓")) opt.text += " ✓";
+                } else {
+                    opt.classList.remove("used-item");
+                    opt.text = opt.value;
+                }
+            });
+
+            // Beruf 2 Optionen markieren
+            const b2Select = document.getElementById("sel-beruf2");
+            Array.from(b2Select.options).forEach(opt => {
+                if(usedBerufe.includes(opt.value)) {
+                    opt.classList.add("used-item");
+                    if(!opt.text.endsWith(" ✓")) opt.text += " ✓";
+                } else {
+                    opt.classList.remove("used-item");
+                    opt.text = opt.value;
+                }
+            });
+        }
+
+        function addCharacter() {
+            const vorname = document.getElementById("inp-vorname").value.trim();
+            const nachname = document.getElementById("inp-nachname").value.trim();
+            const b1 = document.getElementById("sel-beruf1").value;
+            const b2 = document.getElementById("sel-beruf2").value;
+            
+            if(!vorname) {
+                alert("Bitte gib mindestens einen Vornamen ein!");
+                return;
+            }
+            if(b1 === b2) {
+                alert("Ein Charakter kann nicht zweimal denselben Beruf ausüben!");
+                return;
+            }
+
+            const charakter = {
+                id: Date.now(),
+                name: vorname + (nachname ? " " + nachname : ""),
+                fraktion: aktuelleFraktion,
+                rasse: document.getElementById("sel-rasse").value,
+                klasse: document.getElementById("sel-klasse").value,
+                beruf1: b1,
+                beruf2: b2
+            };
+
+            charaktere.push(charakter);
+            saveToLocalStorage();
+            renderList();
+            markUsedOptions();
+            
+            document.getElementById("inp-vorname").value = "";
+            document.getElementById("inp-nachname").value = "";
+        }
+
+        function deleteChar(id) {
+            charaktere = charaktere.filter(c => c.id !== id);
+            saveToLocalStorage();
+            renderList();
+            markUsedOptions();
+        }
+
+        function renderList() {
+            const container = document.getElementById("char-list-container");
+            container.innerHTML = "";
+
+            if(charaktere.length === 0) {
+                container.innerHTML = `<div class="empty-msg">Noch keine Charaktere erstellt. Nutze den Editor links!</div>`;
+                return;
+            }
+
+            charaktere.forEach(c => {
+                container.innerHTML += `
+                    <div class="char-card cls-${c.klasse}">
+                        <div class="char-info">
+                            <div class="char-name">${c.name}</div>
+                            <div class="char-details">${c.fraktion === 'Allianz' ? '🔵' : '🔴'} ${c.rasse} | ${c.klasse}</div>
+                            <div class="char-professions">🛠️ Berufe: ${c.beruf1}, ${c.beruf2}</div>
+                        </div>
+                        <button class="del-btn" onclick="deleteChar(${c.id})">Löschen</button>
+                    </div>
+                `;
+            });
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem("wow_forever_kader", JSON.stringify(charaktere));
+        }
+
+        function loadFromLocalStorage() {
+            const data = localStorage.getItem("wow_forever_kader");
+            if(data) {
+                charaktere = JSON.parse(data);
+                renderList();
+            }
+        }
+
+        function exportData() {
+            if(charaktere.length === 0) {
+                alert("Es gibt keine Daten zum Exportieren!");
+                return;
+            }
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(charaktere));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "wow_forever_kader_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if(Array.isArray(imported)) {
+                        charaktere = imported;
+                        saveToLocalStorage();
+                        renderList();
+                        markUsedOptions();
+                        alert("Kader erfolgreich importiert!");
+                    } else {
+                        alert("Ungültiges Dateiformat!");
+                    }
+                } catch(ex) {
+                    alert("Fehler beim Lesen der Datei!");
+                }
+            };
+            reader.readAsText(file);
+            input.value = ""; // Reset file input
+        }
+
+        function openPrintPreview() {
+            if(charaktere.length === 0) {
+                alert("Die Liste ist leer!");
+                return;
+            }
+
+            const previewContent = document.getElementById("preview-content");
+            let html = `<h1>⚔️ WoW Forever — Offizielle Kaderliste ⚔️</h1>`;
+            
+            charaktere.forEach(c => {
+                html += `
+                    <div class="char-card cls-${c.klasse}" style="box-shadow: none; border-radius: 5px; margin-bottom: 12px;">
+                        <div class="char-info">
+                            <div class="char-name">${c.name}</div>
+                            <div class="char-details">${c.fraktion === 'Allianz' ? '🔵' : '🔴'} ${c.rasse} | ${c.klasse}</div>
+                            <div class="char-professions">🛠️ Berufe: ${c.beruf1}, ${c.beruf2}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            previewContent.innerHTML = html;
+            document.getElementById("modal-overlay").style.display = "flex";
+        }
+
+        function closePrintPreview() {
+            document.getElementById("modal-overlay").style.display = "none";
+        }
+    </script>
+</body>
+</html>
