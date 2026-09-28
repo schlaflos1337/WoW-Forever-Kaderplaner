@@ -6,22 +6,21 @@
     <style>
         body { background-color: #111; color: #f3e5ab; font-family: 'Arial', sans-serif; margin: 0; padding: 20px; }
         h1 { text-align: center; color: #c79c6e; text-shadow: 2px 2px 4px #000; margin-bottom: 25px; }
-        .container { max-width: 1500px; margin: 0 auto; background: #1a1a1a; border: 2px solid #c79c6e; border-radius: 8px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.7); }
+        .container { max-width: 1400px; margin: 0 auto; background: #1a1a1a; border: 2px solid #c79c6e; border-radius: 8px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.7); }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #151515; }
         th, td { border: 1px solid #c79c6e; padding: 10px; text-align: left; vertical-align: middle; }
         th { background: #2a2a2a; color: #c79c6e; font-weight: bold; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
         tr:hover { background: #1f1f1f; }
 
-        input[type="text"] { width: 90%; padding: 8px; background: #2a2a2a; color: #fff; border: 1px solid #c79c6e; border-radius: 4px; font-size: 14px; }
+        input[type="text"] { width: 92%; padding: 8px; background: #2a2a2a; color: #fff; border: 1px solid #c79c6e; border-radius: 4px; font-size: 14px; }
         input[type="text"]:focus { border-color: #f3e5ab; outline: none; }
         
         select { width: 100%; padding: 8px; background: #2a2a2a; color: #fff; border: 1px solid #c79c6e; border-radius: 4px; font-size: 14px; cursor: pointer; margin-bottom: 4px; }
         select:focus { border-color: #f3e5ab; outline: none; }
 
         .sub-select { background: #1f1f1f; border-color: #8e7a54; font-size: 12px; color: #d0c295; }
-
-        .racial-info-box { font-size: 11px; color: #bbb; margin-top: 5px; font-style: italic; max-width: 200px; line-height: 1.3; }
+        .racial-info-box { font-size: 11px; color: #bbb; margin-top: 5px; font-style: italic; max-width: 220px; line-height: 1.3; }
 
         .btn { padding: 10px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; border: 1px solid #c79c6e; transition: 0.2s; font-family: inherit; }
         .add-btn { background: #c79c6e; color: #111; border: none; padding: 12px 20px; font-size: 15px; }
@@ -43,7 +42,6 @@
         select.fraktion-allianz { color: #0070DE !important; font-weight: bold; }
         select.fraktion-horde { color: #C41F3B !important; font-weight: bold; }
 
-        /* Reihen-Klassenfarben */
         .cls-Krieger { background-color: #3a2e24 !important; border-left: 5px solid #C79C6E; color: #C79C6E; }
         .cls-Paladin { background-color: #3b202c !important; border-left: 5px solid #F58CBA; color: #F58CBA; }
         .cls-Jäger { background-color: #28331b !important; border-left: 5px solid #ABD473; color: #ABD473; }
@@ -54,27 +52,27 @@
         .cls-Hexenmeister { background-color: #261f33 !important; border-left: 5px solid #9482C9; color: #9482C9; }
         .cls-Druide { background-color: #3a2310 !important; border-left: 5px solid #FF7D0A; color: #FF7D0A; }
 
-        /* Modal & Print-Preview */
+        .char-card { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; margin-bottom: 10px; border-radius: 5px; border-left: 6px solid #fff; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .char-info { display: flex; flex-direction: column; gap: 4px; }
+        .char-name { font-size: 18px; color: #fff; text-shadow: 1px 1px 2px #000; }
+        .char-details { font-size: 14px; color: #f3e5ab; }
+        .char-professions { font-size: 13px; color: #ddd; font-weight: normal; }
+
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; z-index: 1000; overflow-y: auto; padding: 20px 0; }
-        .modal-box { background: #1a1a1a; color: #f3e5ab; width: 95%; max-width: 1100px; border: 2px solid #c79c6e; border-radius: 8px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .modal-box { background: #1a1a1a; color: #f3e5ab; width: 90%; max-width: 800px; border: 2px solid #c79c6e; border-radius: 8px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #c79c6e; padding-bottom: 15px; margin-bottom: 20px; }
-        .modal-title { font-size: 22px; font-weight: bold; color: #c79c6e; }
+        .modal-title { font-size: 22px; font-weight: bold; color: #c79c6e; text-shadow: 1px 1px 3px #000; }
         .modal-actions { display: flex; gap: 10px; }
         
         .preview-body { padding: 10px 0; }
-        .preview-table { width: 100%; border-collapse: collapse; color: #fff; background: #151515; }
-        .preview-table th, .preview-table td { border: 1px solid #c79c6e; padding: 10px; text-align: left; }
-        .preview-table th { background: #2a2a2a; color: #c79c6e; }
+        .preview-body h1 { color: #c79c6e; font-size: 24px; border-bottom: 1px solid #c79c6e; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
 
         @media print {
             body * { display: none !important; }
             #modal-overlay, #modal-overlay * { display: flex !important; }
             .modal-header, .modal-actions { display: none !important; }
-            .modal-overlay { position: absolute; top: 0; left: 0; background: #fff !important; width: 100%; height: auto; padding: 0; }
-            .modal-box { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; max-height: none; overflow: visible; background: #fff !important; color: #000 !important; }
-            .preview-table { background: #fff !important; color: #000 !important; width: 100% !important; }
-            .preview-table th, .preview-table td { border: 1px solid #000 !important; padding: 8px !important; }
-            .preview-table th { background: #e5e5e5 !important; color: #000 !important; }
+            .modal-overlay { position: absolute; top: 0; left: 0; background: #111 !important; width: 100%; height: auto; padding: 0; }
+            .modal-box { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; max-height: none; overflow: visible; background: transparent !important; }
         }
     </style>
 </head>
@@ -110,6 +108,7 @@
                 <button class="btn sync-btn" onclick="exportData()">💾 Exportieren</button>
                 <button class="btn sync-btn" onclick="document.getElementById('import-file').click()">📂 Importieren</button>
                 <input type="file" id="import-file" style="display:none" onchange="importData(this)" accept=".json">
+                <button class="btn del-btn" style="background: #331111; color: #ffaaaa; border-color: #552222; margin-left: 15px;" onclick="clearLocalStorageData()">⚠️ Speicher zurücksetzen</button>
             </div>
             <button class="btn print-btn" onclick="openPrintPreview()">🖨️ Liste ausdrucken</button>
         </div>
@@ -155,9 +154,7 @@
             "Troll": "Berserker (Tempo-Boost), Regeneration, Wildtierschlächter.",
             "Himmelsgeborene": "Arkaner Strom (Stilleffekt), Magiewiderstand, Arkane Affinität."
         };
-        
         const berufe = ["Keiner", "Alchemie", "Bergbau", "Ingenieurskunst", "Kräuterkunde", "Kürschnerei", "Lederverarbeitung", "Schmiedekunst", "Schneiderei", "Verzauberungskunst"];
-        
         const spezialisierungen = {
             "Keiner": [],
             "Lederverarbeitung": ["Keine Spezi.", "Stammeslederverarbeitung", "Elementarlederverarbeitung", "Drachenschuppenlederverarbeitung"],
@@ -170,13 +167,19 @@
 
         window.onload = function() {
             loadFromLocalStorage();
-            if (charaktere.length === 0) { addEmptyRow(); } else { renderTable(); }
+            if (charaktere.length === 0) {
+                addEmptyRow();
+            } else {
+                renderTable();
+            }
         };
 
         function renderTable() {
             const tbody = document.getElementById("kader-table-body");
             tbody.innerHTML = "";
-            charaktere.forEach((char, index) => { tbody.appendChild(createRowElement(char, index)); });
+            charaktere.forEach((char, index) => {
+                tbody.appendChild(createRowElement(char, index));
+            });
             markUsedOptionsAllRows();
         }
 
@@ -200,34 +203,56 @@
             const tdFraktion = document.createElement("td");
             const selFraktion = document.createElement("select");
             selFraktion.className = char.fraktion === "Allianz" ? "fraktion-allianz" : "fraktion-horde";
-            selFraktion.innerHTML = `<option value="Allianz" ${char.fraktion === "Allianz" ? "selected" : ""}>Allianz 🔵</option><option value="Horde" ${char.fraktion === "Horde" ? "selected" : ""}>Horde 🔴</option>`;
+            selFraktion.innerHTML = `
+                <option value="Allianz" ${char.fraktion === "Allianz" ? "selected" : ""}>Allianz 🔵</option>
+                <option value="Horde" ${char.fraktion === "Horde" ? "selected" : ""}>Horde 🔴</option>
+            `;
             selFraktion.onchange = function() {
-                updateCharData(index, 'fraktion', this.value);
-                const standardVolk = rassenFraktion[this.value];
-                updateCharData(index, 'volk', standardVolk);
-                updateCharData(index, 'klasse', erlaubteKombis[standardVolk]);
+                const neueFraktion = this.value;
+                const erstesVolk = rassenFraktion[neueFraktion][0]; 
+                const ersteKlasse = erlaubteKombis[erstesVolk][0];
+                
+                charaktere[index]['fraktion'] = neueFraktion;
+                charaktere[index]['volk'] = erstesVolk;
+                charaktere[index]['klasse'] = ersteKlasse;
+                
+                saveToLocalStorage();
                 renderTable();
             };
             tdFraktion.appendChild(selFraktion);
 
             const tdVolk = document.createElement("td");
             const selVolk = document.createElement("select");
-            rassenFraktion[char.fraktion].forEach(r => { selVolk.innerHTML += `<option value="${r}" ${char.volk === r ? "selected" : ""}>${r}</option>`; });
+            rassenFraktion[char.fraktion].forEach(r => {
+                selVolk.innerHTML += `<option value="${r}" ${char.volk === r ? "selected" : ""}>${r}</option>`;
+            });
             selVolk.onchange = function() {
-                updateCharData(index, 'volk', this.value);
-                updateCharData(index, 'klasse', erlaubteKombis[this.value]);
+                const neuesVolk = this.value;
+                const ersteKlasse = erlaubteKombis[neuesVolk][0];
+                
+                charaktere[index]['volk'] = neuesVolk;
+                charaktere[index]['klasse'] = ersteKlasse;
+                
+                saveToLocalStorage();
                 renderTable();
             };
+            
             const racialBox = document.createElement("div");
             racialBox.className = "racial-info-box";
             racialBox.innerHTML = `<strong>Fähigkeit:</strong> ${volksfaehigkeiten[char.volk] || ''}`;
-            tdVolk.appendChild(selVolk);tdVolk.appendChild(racialBox);
+            tdVolk.appendChild(selVolk);
+            tdVolk.appendChild(racialBox);
 
             const tdKlasse = document.createElement("td");
             const selKlasse = document.createElement("select");
             selKlasse.className = `cls-${char.klasse}`;
-            erlaubteKombis[char.volk].forEach(k => { selKlasse.innerHTML += `<option value="${k}" ${char.klasse === k ? "selected" : ""}>${k}</option>`; });
-            selKlasse.onchange = function() { updateCharData(index, 'klasse', this.value); renderTable(); };
+            erlaubteKombis[char.volk].forEach(k => {
+                selKlasse.innerHTML += `<option value="${k}" ${char.klasse === k ? "selected" : ""}>${k}</option>`;
+            });
+            selKlasse.onchange = function() {
+                updateCharData(index, 'klasse', this.value);
+                renderTable();
+            };
             tdKlasse.appendChild(selKlasse);
 
             // Beruf 1 & Spezi 1
@@ -347,20 +372,32 @@
             });
         }
 
-        function saveToLocalStorage() { localStorage.setItem("wow_forever_kader", JSON.stringify(charaktere)); }
+        function saveToLocalStorage() {
+            localStorage.setItem("wow_forever_kader", JSON.stringify(charaktere));
+        }
+
+        function clearLocalStorageData() {
+            if(confirm("Möchtest du wirklich alle im Browser gespeicherten Charaktere löschen? Der Speicher wird komplett zurückgesetzt.")) {
+                localStorage.removeItem("wow_forever_kader");
+                charaktere = [];
+                addEmptyRow();
+            }
+        }
 
         function loadFromLocalStorage() {
             const data = localStorage.getItem("wow_forever_kader");
             if(data) {
                 try {
-                    charaktere = JSON.parse(data).map(c => {
+                    const loaded = JSON.parse(data);
+                    charaktere = loaded.map(c => {
                         if (c.name && (!c.vorname && !c.nachname)) {
                             const parts = c.name.split(" ");
                             c.vorname = parts[0] || "";
                             c.nachname = parts.slice(1).join(" ") || "";
                         }
-                        if(!c.spezi1) c.spezi1 = "Keine Spezi.";
-                        if(!c.spezi2) c.spezi2 = "Keine Spezi.";
+                        if (!c.id) c.id = Date.now() + Math.random();
+                        if (!c.spezi1) c.spezi1 = "Keine Spezi.";
+                        if (!c.spezi2) c.spezi2 = "Keine Spezi.";
                         return c;
                     });
                 } catch(e) { charaktere = []; }
@@ -370,18 +407,21 @@
         function exportData() {
             if(charaktere.length === 0) { alert("Es gibt keine Daten zum Exportieren!"); return; }
             const exportReady = charaktere.map(c => {
-                c.name = (c.vorname || "") + (c.nachname ? " " + c.nachname : "");
+                c.name = ((c.vorname || '') + " " + (c.nachname || '')).trim();
                 return c;
             });
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportReady, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
             downloadAnchor.setAttribute("download", "wow_forever_kader_backup.json");
-            document.body.appendChild(downloadAnchor);downloadAnchor.click();downloadAnchor.remove();
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
         }
 
         function importData(fileInput) {
-            const file = fileInput.files; if (!file) return;
+            const file = fileInput.files[0];
+            if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
@@ -393,62 +433,53 @@
                                 c.vorname = parts[0] || "";
                                 c.nachname = parts.slice(1).join(" ") || "";
                             }
-                            if(!c.spezi1) c.spezi1 = "Keine Spezi.";
-                            if(!c.spezi2) c.spezi2 = "Keine Spezi.";
+                            if (!c.id) c.id = Date.now() + Math.random();
+                            if (!c.spezi1) c.spezi1 = "Keine Spezi.";
+                            if (!c.spezi2) c.spezi2 = "Keine Spezi.";
                             return c;
                         });
-                        saveToLocalStorage();renderTable();
+                        saveToLocalStorage();
+                        renderTable();
                         alert("Kader erfolgreich importiert!");
                     } else { alert("Ungültiges Dateiformat!"); }
                 } catch(err) { alert("Fehler beim Lesen der Datei!"); }
             };
-            reader.readAsText(file);fileInput.value = "";
+            reader.readAsText(file);
+            fileInput.value = "";
         }
 
         function openPrintPreview() {
             if(charaktere.length === 0) { alert("Die Liste ist leer!"); return; }
             const previewContent = document.getElementById("preview-content");
-            
             let html = `<h1>⚔️ WoW Forever — Offizielle Kaderliste ⚔️</h1>`;
-            html += `<table class="preview-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Fraktion</th>
-                        <th>Volk</th>
-                        <th>Klasse</th>
-                        <th>1. Hauptberuf & Spezialisierung</th>
-                        <th>2. Hauptberuf & Spezialisierung</th>
-                    </tr>
-                </thead>
-                <tbody>`;
             
             charaktere.forEach(c => {
-                const vollName = (c.vorname || '') + " " + (c.nachname || '');
-                if ((c.vorname && c.vorname.trim() !== "") || (c.nachname && c.nachname.trim() !== "")) {
+                const vollName = ((c.vorname || '') + " " + (c.nachname || '')).trim();
+                if (vollName !== "") {
                     let b1Text = c.beruf1 === "Keiner" ? "-" : c.beruf1;
                     if(c.spezi1 && c.spezi1 !== "Keine Spezi.") b1Text += ` (${c.spezi1})`;
 
                     let b2Text = c.beruf2 === "Keiner" ? "-" : c.beruf2;
                     if(c.spezi2 && c.spezi2 !== "Keine Spezi.") b2Text += ` (${c.spezi2})`;
 
-                    html += `<tr>
-                        <td><strong>${vollName.trim()}</strong></td>
-                        <td>${c.fraktion === 'Allianz' ? '🔵 Allianz' : '🔴 Horde'}</td>
-                        <td>${c.volk}</td>
-                        <td><strong>${c.klasse}</strong></td>
-                        <td>${b1Text}</td>
-                        <td>${b2Text}</td>
-                    </tr>`;
+                    html += `
+                        <div class="char-card cls-${c.klasse}" style="box-shadow: none; border-radius: 5px; margin-bottom: 12px;">
+                            <div class="char-info">
+                                <div class="char-name">${vollName}</div>
+                                <div class="char-details">${c.fraktion === 'Allianz' ? '🔵' : '🔴'} ${c.rasse} | ${c.klasse}</div>
+                                <div class="char-professions">🛠️ Berufe: ${b1Text}, ${b2Text}</div>
+                            </div>
+                        </div>
+                    `;
                 }
             });
-            
-            html += `</tbody></table>`;
             previewContent.innerHTML = html;
             document.getElementById("modal-overlay").style.display = "flex";
         }
 
-        function closePrintPreview() { document.getElementById("modal-overlay").style.display = "none"; }
+        function closePrintPreview() {
+            document.getElementById("modal-overlay").style.display = "none";
+        }
     </script>
 </body>
 </html>
