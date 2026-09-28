@@ -1,1 +1,1 @@
-# WoW-Talent-Plannr
+# WoW-Talent-Planer
